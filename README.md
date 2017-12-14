@@ -1,8 +1,8 @@
-# require-vue
+# require-vue-loader
 
 > A require hook for loading single-file vue component in Node. support i18next
 
-`npm i require-vue`
+`npm i require-vue-loader`
 
 fork from `require-extension-vue`, old README see [here](README.old.md)
 
@@ -24,8 +24,8 @@ see more api at [source code](https://github.com/bluelovers/require-extension-vu
 1. auto register like old way
 
 ```javascript
-import loader from 'require-vue/register';
-import tsPlugin from 'require-vue/lib/plugin/ts';
+import loader from 'require-vue-loader/register';
+import tsPlugin from 'require-vue-loader/lib/plugin/ts';
 
 loader.use(tsPlugin);
 ```
@@ -33,8 +33,8 @@ loader.use(tsPlugin);
 2.
 
 ```javascript
-import loader from 'require-vue';
-import tsPlugin from 'require-vue/lib/plugin/ts';
+import loader from 'require-vue-loader';
+import tsPlugin from 'require-vue-loader/lib/plugin/ts';
 
 loader.register();
 loader.use(tsPlugin);
@@ -46,7 +46,7 @@ tsPlugin can work on old `require-extension-vue` too
 
 ```javascript
 import * as loader from 'require-extension-vue';
-import tsPlugin from 'require-vue/lib/plugin/ts';
+import tsPlugin from 'require-vue-loader/lib/plugin/ts';
 
 tsPlugin.register(loader);
 ```
