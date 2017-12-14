@@ -6,6 +6,7 @@ import * as hash from 'hash-sum';
 import * as cssWhat from 'css-what';
 import * as stripBom from 'strip-bom';
 import * as compiler from 'vue-template-compiler';
+import normalizeComponent from './lib/normalize-component';
 
 /**
  * @fork https://github.com/fb55/css-what/blob/master/stringify.js
@@ -81,11 +82,10 @@ function register(type, lang, handler)
  * @param {String} filePath file path
  * @export {Vue} Vue Component after compile
  */
-function loader(module, filePath)
+export function loader(vueModule, filePath)
 {
-
 	let content = fs.readFileSync(filePath, 'utf8');
-	let moduleId = `data-v-${ hash(filePath) }`;
+	let scopeId = `data-v-${ hash(filePath) }`;
 
 	let vueTemplate = '';
 	let vueComponent = compiler.parseComponent(stripBom(content));
@@ -106,7 +106,7 @@ function loader(module, filePath)
 			let handler = store[type].langs[lang];
 			if (handler)
 			{
-				content = handler(content, filePath, index, module);
+				content = handler(content, filePath, index, vueModule);
 			}
 			switch (type)
 			{
@@ -135,7 +135,7 @@ function loader(module, filePath)
 									}
 									patterns.splice(index + 1, 0, {
 										value: '',
-										name: moduleId,
+										name: scopeId,
 										action: 'exists',
 										type: 'attribute',
 										ignoreCase: false,
@@ -147,7 +147,7 @@ function loader(module, filePath)
 						}
 						let style = document.createElement('style');
 						style.innerHTML = content;
-						store.style.exports.call(module.exports, style, {
+						store.style.exports.call(vueModule.exports, style, {
 							index,
 							styles,
 							filePath,
@@ -155,7 +155,7 @@ function loader(module, filePath)
 					}
 					break;
 				case 'script':
-					module._compile(content, filePath);
+					vueModule._compile(content, filePath);
 					break;
 				case 'template':
 					if (browserEnv)
@@ -179,7 +179,7 @@ function loader(module, filePath)
 							};
 							walk(root, (element) =>
 							{
-								element.setAttribute(moduleId, '');
+								element.setAttribute(scopeId, '');
 							});
 							content = div.innerHTML;
 						}
@@ -190,8 +190,12 @@ function loader(module, filePath)
 		}
 	});
 
-	module.exports.vueComponent = vueComponent;
-	module.exports.template = vueTemplate;
+	console.log(vueModule);
+
+	vueModule.exports.vueComponent = vueComponent;
+	vueModule.exports.template = vueTemplate;
+
+	vueModule.exports = normalizeComponent(vueModule.exports, scopeId, vueModule);
 }
 
 /**
@@ -223,12 +227,30 @@ loader.style.exports = (handler) =>
 	return this;
 };
 
-/**
- * Register Loader as default .vue hook
- */
-require.extensions['.vue'] = require.extensions['.vue'] || loader;
+export namespace loader
+{
+	/**
+	 * Register Loader as default .vue hook
+	 */
+	export function register(targetRequire = require)
+	{
+		targetRequire.extensions['.vue'] = targetRequire.extensions['.vue'] || loader;
+	}
+
+	export function use(pligins)
+	{
+		(Array.isArray(pligins) ? pligins : [pligins])
+			.forEach(function (pligin)
+			{
+				pligin.register(loader);
+			})
+		;
+
+		return loader;
+	}
+}
 
 /**
  * @export {Function} loader
  */
-module.exports = loader;
+export default loader;
