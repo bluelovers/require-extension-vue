@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+/.jshintrc
+/.bithoundrc
+/.travis.yml
+/package-lock.json
+/test/
+/node_modules/
+/.idea/
