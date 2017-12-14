@@ -18,6 +18,10 @@
     "register",
     "loader",
     "atom",
+    "i18next",
+    "i18n",
+    "typescript",
+    "webpack",
     "electron"
   ],
   "author": {

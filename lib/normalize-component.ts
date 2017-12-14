@@ -30,7 +30,7 @@ export interface IComponentModule
 	__fire: string;
 }
 
-export function normalizeComponent(rawScriptExports, scopeId: string, vueModule): IComponentModule
+export function normalizeComponent(rawScriptExports, scopeId: string, vueModule, extendExports = {}): IComponentModule
 {
 	let esModule;
 	let scriptExports = rawScriptExports = rawScriptExports || {};
@@ -52,7 +52,7 @@ export function normalizeComponent(rawScriptExports, scopeId: string, vueModule)
 		options._scopeId = scopeId;
 	}
 
-	return Object.defineProperty({
+	let newExports = Object.defineProperty({
 		/**
 		 * raw module exports
 		 */
@@ -72,7 +72,13 @@ export function normalizeComponent(rawScriptExports, scopeId: string, vueModule)
 		'$options': scriptExports,
 
 		__fire: vueModule.filename,
-	}, "__esModule", { value: true });
+	}, "__esModule", { value: true }) as IComponentModule;
+
+	Object.assign(newExports.$options, {
+		__fire: newExports.__fire,
+	}, extendExports, newExports.$options);
+
+	return newExports;
 }
 
 // @ts-ignore
