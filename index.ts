@@ -6,7 +6,7 @@ import * as hash from 'hash-sum';
 import * as cssWhat from 'css-what';
 import * as stripBom from 'strip-bom';
 import * as compiler from 'vue-template-compiler';
-import normalizeComponent from './lib/normalize-component';
+import { normalizeComponent, IComponentModule } from './lib/normalize-component';
 
 /**
  * @fork https://github.com/fb55/css-what/blob/master/stringify.js
@@ -85,7 +85,8 @@ function register(type, lang, handler)
 export function loader(vueModule, filePath)
 {
 	let content = fs.readFileSync(filePath, 'utf8');
-	let scopeId = `data-v-${ hash(filePath) }`;
+	let moduleId = `data-v-${ hash(filePath) }`;
+	let scopeId = moduleId;
 
 	let vueTemplate = '';
 	let vueComponent = compiler.parseComponent(stripBom(content));
@@ -95,6 +96,8 @@ export function loader(vueModule, filePath)
 	let template = vueComponent.template;
 
 	let scoped = styles.some(({ attrs }) => attrs.scoped);
+
+	let extendExports = {} as any;
 
 	[].concat(script, template, styles).forEach((tag, index) =>
 	{
@@ -106,7 +109,7 @@ export function loader(vueModule, filePath)
 			let handler = store[type].langs[lang];
 			if (handler)
 			{
-				content = handler(content, filePath, index, vueModule);
+				content = handler(content, filePath, index, vueModule, vueComponent);
 			}
 			switch (type)
 			{
@@ -153,6 +156,10 @@ export function loader(vueModule, filePath)
 							filePath,
 						});
 					}
+					else
+					{
+						// @todo css in node
+					}
 					break;
 				case 'script':
 					vueModule._compile(content, filePath);
@@ -190,12 +197,36 @@ export function loader(vueModule, filePath)
 		}
 	});
 
-	console.log(vueModule);
+	//console.log(vueModule);
 
 	vueModule.exports.vueComponent = vueComponent;
-	vueModule.exports.template = vueTemplate;
+	//vueModule.exports.template = vueTemplate;
 
-	vueModule.exports = normalizeComponent(vueModule.exports, scopeId, vueModule);
+	let options = extendExports;
+
+	for (let index in vueComponent.customBlocks)
+	{
+		let block = vueComponent.customBlocks[index];
+
+		switch (block.type)
+		{
+			case 'i18n':
+
+				if (!block.attrs.lang || block.attrs.lang == 'json')
+				{
+
+				}
+
+				options.__i18n = options.__i18n || [];
+				options.__i18n .push(JSON.parse(block.content));
+
+				break;
+		}
+	}
+
+	extendExports.template = vueTemplate;
+
+	vueModule.exports = normalizeComponent(vueModule.exports, scopeId, vueModule, extendExports) as IComponentModule;
 }
 
 /**
