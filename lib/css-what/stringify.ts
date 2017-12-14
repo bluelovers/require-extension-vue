@@ -2,7 +2,7 @@
  * @fork https://github.com/fb55/css-what/blob/master/stringify.js
  */
 
-var actionTypes = {
+let actionTypes = {
 	"equals": "",
 	"element": "~",
 	"start": "^",
@@ -12,7 +12,7 @@ var actionTypes = {
 	"hyphen": "|"
 };
 
-var simpleSelectors = {
+let simpleSelectors = {
 	__proto__: null,
 	child: " > ",
 	parent: " < ",
@@ -22,7 +22,7 @@ var simpleSelectors = {
     universal: "*"
 };
 
-module.exports = stringify;
+export = stringify;
 
 function stringify(token){
     return token.map(stringifySubselector).join(", ");
