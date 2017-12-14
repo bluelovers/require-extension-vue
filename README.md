@@ -28,8 +28,6 @@ import loader from 'require-vue-loader/register';
 import tsPlugin from 'require-vue-loader/lib/plugin/ts';
 
 loader.use(tsPlugin);
-
-import testVue from './test/temp/test.vue';
 ```
 
 2.
@@ -40,8 +38,13 @@ import tsPlugin from 'require-vue-loader/lib/plugin/ts';
 
 loader.register();
 loader.use(tsPlugin);
+```
 
+---
+
+```javascript
 import testVue from './test/temp/test.vue';
+import testVue, { vueComponent, esModule, $options, options } from './test/temp/test.vue';
 ```
 
 ## plugin
