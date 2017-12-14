@@ -11,6 +11,8 @@ export interface IComponentModule
 	 */
 	esModule: IEsModule;
 
+	vueComponent: IVueComponent;
+
 	/**
 	 * for create Vue Component
 	 */
@@ -30,16 +32,19 @@ export interface IComponentModule
 	__fire: string;
 }
 
+export interface IVueComponent
+{
+	template,
+	script,
+	styles: any[],
+	customBlocks: any[],
+}
+
 export interface IEsModule
 {
 	default;
 
-	vueComponent: {
-		template,
-		script,
-		styles: any[],
-		customBlocks: any[],
-	};
+	vueComponent: IVueComponent;
 
 	[index: string]: any;
 }
@@ -71,6 +76,8 @@ export function normalizeComponent(rawScriptExports, scopeId: string, vueModule,
 		 * raw module exports
 		 */
 		esModule: esModule,
+
+		vueComponent: esModule.vueComponent,
 
 		/**
 		 * for create Vue Component
