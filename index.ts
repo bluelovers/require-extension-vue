@@ -1,17 +1,17 @@
 'use strict';
 
-const fs = require('fs');
-const css = require('css');
-const hash = require('hash-sum');
-const cssWhat = require('css-what');
-const stripBom = require('strip-bom');
-const compiler = require('vue-template-compiler');
+import * as fs from 'fs';
+import * as css from 'css';
+import * as hash from 'hash-sum';
+import * as cssWhat from 'css-what';
+import * as stripBom from 'strip-bom';
+import * as compiler from 'vue-template-compiler';
 
 /**
  * @fork https://github.com/fb55/css-what/blob/master/stringify.js
  * @type {Function} stringify
  */
-cssWhat.stringify = require('./css-what/stringify');
+cssWhat.stringify = require('./lib/css-what/stringify');
 
 /**
  * In Browser Environment
