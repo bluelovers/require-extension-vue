@@ -1,6 +1,6 @@
 # require-vue-loader
 
-> A require hook for loading single-file vue component in Node. support i18next
+> A require hook for loading single-file vue component in Node. support i18next, without babel, webpack
 
 `npm i require-vue-loader`
 
