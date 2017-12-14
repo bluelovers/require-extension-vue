@@ -63,6 +63,14 @@ describe(relative(__filename), () =>
 			expect(def_exports._scopeId).to.be.ok;
 		});
 
+		it(`vueComponent`, async function ()
+		{
+			let vueComponent = testVueModeule.vueComponent;
+
+			expect(vueComponent).to.be.ok;
+			expect(vueComponent).to.be.deep.equal(testVueModeule.esModule.vueComponent);
+		});
+
 		it(`i18n`, async function ()
 		{
 			let def_exports = testVueModeule.default;
