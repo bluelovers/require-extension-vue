@@ -8,6 +8,8 @@ import * as stripBom from 'strip-bom';
 import * as compiler from 'vue-template-compiler';
 import { normalizeComponent, IComponentModule } from './lib/normalize-component';
 
+export { IComponentModule };
+
 /**
  * @fork https://github.com/fb55/css-what/blob/master/stringify.js
  * @type {Function} stringify
@@ -218,7 +220,7 @@ export function loader(vueModule, filePath)
 				}
 
 				options.__i18n = options.__i18n || [];
-				options.__i18n .push(JSON.parse(block.content));
+				options.__i18n.push(JSON.parse(block.content));
 
 				break;
 		}

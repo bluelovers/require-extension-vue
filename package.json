@@ -1,7 +1,7 @@
 {
   "name": "require-vue-loader",
-  "version": "2.0.1",
-  "description": "A require hook for loading single-file vue component in Node with Browser environment.",
+  "version": "2.0.3",
+  "description": "A require hook for loading single-file vue component in Node. support i18next, without babel, webpack",
   "main": "index.js",
   "scripts": {
     "test": "npx mocha"

@@ -9,7 +9,7 @@ export interface IComponentModule
 	/**
 	 * raw module exports
 	 */
-	esModule;
+	esModule: IEsModule;
 
 	/**
 	 * for create Vue Component
@@ -28,6 +28,20 @@ export interface IComponentModule
 	 * module path
 	 */
 	__fire: string;
+}
+
+export interface IEsModule
+{
+	default;
+
+	vueComponent: {
+		template,
+		script,
+		styles: any[],
+		customBlocks: any[],
+	};
+
+	[index: string]: any;
 }
 
 export function normalizeComponent(rawScriptExports, scopeId: string, vueModule, extendExports = {}): IComponentModule
